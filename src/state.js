@@ -24,7 +24,3 @@ export async function record(event) {
   await writeFile(file, JSON.stringify(history, null, 2) + '\n');
   return history;
 }
-
-export function countBy(history, achievement) {
-  return history.events.filter((e) => e.achievement === achievement).length;
-}
