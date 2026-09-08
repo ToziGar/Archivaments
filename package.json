@@ -1,0 +1,20 @@
+{
+  "name": "archivaments",
+  "version": "1.0.0",
+  "description": "CLI sin dependencias para desbloquear logros (achievements) de GitHub en un repositorio sandbox propio",
+  "type": "module",
+  "bin": {
+    "archivaments": "./bin/archivaments.js"
+  },
+  "engines": {
+    "node": ">=20.6"
+  },
+  "scripts": {
+    "archivaments": "node bin/archivaments.js",
+    "doctor": "node bin/archivaments.js doctor",
+    "status": "node bin/archivaments.js status"
+  },
+  "keywords": ["github", "achievements", "logros", "pull-shark", "quickdraw", "yolo", "cli"],
+  "license": "MIT",
+  "private": true
+}
