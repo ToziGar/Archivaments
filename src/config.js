@@ -25,16 +25,21 @@ function loadDotEnv() {
 
 /** Ultimo recurso: reutiliza el token de la GitHub CLI si esta instalada. */
 function tokenFromGhCli() {
-  try {
-    const out = execFileSync('gh', ['auth', 'token'], {
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore'],
-      shell: process.platform === 'win32',
-    });
-    return out.trim() || null;
-  } catch {
-    return null;
+  // En Windows el ejecutable real es gh.cmd; probamos ambos sin usar shell,
+  // que ademas evita el aviso de deprecacion de Node por argumentos sin escapar.
+  const candidates = process.platform === 'win32' ? ['gh.cmd', 'gh.exe'] : ['gh'];
+  for (const bin of candidates) {
+    try {
+      const out = execFileSync(bin, ['auth', 'token'], {
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'],
+      });
+      if (out.trim()) return out.trim();
+    } catch {
+      // gh no instalado o sin sesion: seguimos con el siguiente candidato.
+    }
   }
+  return null;
 }
 
 export function resolveToken(flagToken) {
