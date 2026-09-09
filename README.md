@@ -76,7 +76,7 @@ Y cuando lo tengas claro:
 node bin/archivaments.js all --with tu-otra-cuenta
 ```
 
-Eso crea el repo público `archivaments-lab` y desbloquea **Quickdraw**, **Pair Extraordinaire**, **YOLO** y **Pull Shark bronce** en un par de minutos.
+Eso crea el repo público `archivaments-lab` y desbloquea **Quickdraw**, **Pair Extraordinaire**, **YOLO** y **Pull Shark** (nivel base) en un par de minutos.
 
 ### Comandos sueltos
 
@@ -84,7 +84,7 @@ Eso crea el repo público `archivaments-lab` y desbloquea **Quickdraw**, **Pair 
 node bin/archivaments.js quickdraw                      # abre y cierra un issue
 node bin/archivaments.js yolo                           # PR mergeada sin review
 node bin/archivaments.js pair --with usuario1,usuario2  # commit co-autorizado
-node bin/archivaments.js pull-shark --tier plata        # 16 PRs mergeadas
+node bin/archivaments.js pull-shark --tier bronce       # 16 PRs mergeadas
 node bin/archivaments.js pull-shark --count 40          # número exacto
 node bin/archivaments.js status                         # progreso real
 node bin/archivaments.js guide                          # los logros manuales
@@ -133,10 +133,10 @@ Cada pull request son 4 escrituras (rama, commit, PR, merge). GitHub aplica un l
 
 | Nivel | PRs | Tiempo aprox. |
 |---|---|---|
-| bronce | 2 | segundos |
-| plata | 16 | ~1,5 min |
-| oro | 128 | ~11 min |
-| platino | 1024 | ~1,5 h |
+| base | 2 | segundos |
+| bronce | 16 | ~1,5 min |
+| plata | 128 | ~11 min |
+| oro | 1024 | ~1,5 h |
 
 ---
 

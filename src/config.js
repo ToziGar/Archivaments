@@ -69,12 +69,15 @@ export const defaults = {
   mergeMethod: 'merge',
 };
 
-/** Tiers reales publicados por GitHub para los logros con niveles. */
+/**
+ * Niveles publicados por GitHub. Los nombres siguen su convencion
+ * (base / bronze / silver / gold), no la de medallero olimpico.
+ */
 export const tiers = {
-  'pull-shark': { bronce: 2, plata: 16, oro: 128, platino: 1024 },
-  'pair-extraordinaire': { bronce: 1, plata: 10, oro: 24, platino: 48 },
-  'galaxy-brain': { bronce: 2, plata: 8, oro: 16, platino: 32 },
-  starstruck: { bronce: 16, plata: 128, oro: 512, platino: 4096 },
+  'pull-shark': { base: 2, bronce: 16, plata: 128, oro: 1024 },
+  'pair-extraordinaire': { base: 1, bronce: 10, plata: 24, oro: 48 },
+  'galaxy-brain': { base: 2, bronce: 8, plata: 16, oro: 32 },
+  starstruck: { base: 16, bronce: 128, plata: 512, oro: 4096 },
 };
 
 export function tierFor(achievement, count) {

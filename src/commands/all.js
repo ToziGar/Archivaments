@@ -29,7 +29,7 @@ export async function all(ctx) {
   await yolo(ctx);
   results.push('YOLO');
 
-  // Pull Shark bronce son 2 PRs mergeadas; pair y yolo ya han aportado.
+  // El nivel base de Pull Shark son 2 PRs mergeadas; pair y yolo ya aportan.
   const already = ctx.flags.with ? 2 : 1;
   const target = Number(ctx.flags.count) || 2;
   if (target > already) {

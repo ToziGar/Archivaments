@@ -70,7 +70,7 @@ ${rows}
 ${color.bold('OPCIONES')}
   --with <usuarios>    Co-autores para "pair" (separados por comas)
   --count <n>          Numero de PRs para "pull-shark"
-  --tier <nivel>       bronce | plata | oro | platino (equivale a --count)
+  --tier <nivel>       base | bronce | plata | oro (equivale a --count)
   --repo <nombre>      Repositorio sandbox (por defecto: ${defaults.repo})
   --owner <login>      Propietario (por defecto: el usuario del token)
   --merge-method <m>   merge | squash | rebase (por defecto: merge)
@@ -87,11 +87,11 @@ ${color.bold('EJEMPLOS')}
   ${color.gray('# ver que haria, sin tocar nada')}
   archivaments all --with mi-otra-cuenta --dry-run
 
-  ${color.gray('# combo completo: Quickdraw + Pair + YOLO + Pull Shark bronce')}
+  ${color.gray('# combo completo: Quickdraw + Pair + YOLO + Pull Shark base')}
   archivaments all --with mi-otra-cuenta
 
-  ${color.gray('# subir Pull Shark a plata (16 PRs mergeadas)')}
-  archivaments pull-shark --tier plata
+  ${color.gray('# subir Pull Shark a bronce (16 PRs mergeadas)')}
+  archivaments pull-shark --tier bronce
 `;
 }
 

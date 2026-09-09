@@ -29,7 +29,7 @@ el merge fallara con un 405; quita la regla o usa `--repo` con otro nombre.
 ## Pull Shark
 
 **Requisito:** pull requests abiertas por ti que acaben mergeadas.
-**Niveles:** 2 (bronce) / 16 (plata) / 128 (oro) / 1024 (platino).
+**Niveles:** 2 (base) / 16 (bronce) / 128 (plata) / 1024 (oro).
 
 Cuenta la PR mergeada, no el numero de commits. Las PRs en tus propios repos
 publicos cuentan igual que las de proyectos ajenos.
@@ -39,7 +39,7 @@ publicos cuentan igual que las de proyectos ajenos.
 ## Pair Extraordinaire
 
 **Requisito:** commits co-autorizados en una pull request **mergeada**.
-**Niveles:** 1 (bronce) / 10 (plata) / 24 (oro) / 48 (platino).
+**Niveles:** 1 (base) / 10 (bronce) / 24 (plata) / 48 (oro).
 
 Las tres condiciones que hay que cumplir a la vez:
 
@@ -66,7 +66,7 @@ Co-authored-by: Nombre Apellido <12345+usuario@users.noreply.github.com>
 ## Galaxy Brain
 
 **Requisito:** respuestas tuyas marcadas como aceptadas en Discussions.
-**Niveles:** 2 (bronce) / 8 (plata) / 16 (oro) / 32 (platino).
+**Niveles:** 2 (base) / 8 (bronce) / 16 (plata) / 32 (oro).
 
 Sólo el autor de la discusion (o un mantenedor) puede marcar la respuesta.
 En tus propias discusiones te la puedes marcar tu, pero GitHub ha filtrado
@@ -78,7 +78,7 @@ en proyectos que uses de verdad.
 ## Starstruck
 
 **Requisito:** un repositorio tuyo alcanza cierto numero de estrellas.
-**Niveles:** 16 (bronce) / 128 (plata) / 512 (oro) / 4096 (platino).
+**Niveles:** 16 (base) / 128 (bronce) / 512 (plata) / 4096 (oro).
 
 Las estrellas tienen que venir de cuentas reales y distintas. Comprarlas o
 usar cuentas creadas para esto es motivo de suspension de la cuenta.
