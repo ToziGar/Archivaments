@@ -1,165 +1,159 @@
 # 🏆 Archivaments
 
-CLI sin dependencias para desbloquear los logros (*achievements*) de GitHub que **sí** se pueden automatizar, dentro de un repositorio sandbox público tuyo.
+[![CI](https://github.com/ToziGar/Archivaments/actions/workflows/ci.yml/badge.svg)](https://github.com/ToziGar/Archivaments/actions/workflows/ci.yml)
+[![Node](https://img.shields.io/badge/node-%3E%3D20.6-brightgreen)](https://nodejs.org)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-Funciona contra la API REST de GitHub. No necesitas `gh`, ni `git`, ni instalar paquetes: sólo Node 20.6+.
+A zero-dependency CLI that unlocks the GitHub achievements that **can** be automated, inside a public sandbox repository you own.
+
+It talks to the GitHub REST API directly. No `gh`, no `git`, no `npm install` — just Node 20.6+.
+
+> 🇪🇸 [Léeme en español](README.es.md)
 
 ---
 
-## Qué desbloquea de verdad
+## What it actually unlocks
 
-| Logro | Automatizable | Comando | Niveles |
+| Achievement | Automatable | Command | Tiers |
 |---|---|---|---|
-| **Quickdraw** | ✅ Sí | `quickdraw` | sin niveles |
-| **YOLO** | ✅ Sí | `yolo` | sin niveles |
-| **Pull Shark** | ✅ Sí | `pull-shark` | 2 / 16 / 128 / 1024 |
-| **Pair Extraordinaire** | ✅ Sí* | `pair --with <usuario>` | 1 / 10 / 24 / 48 |
+| **Quickdraw** | ✅ Yes | `quickdraw` | one-time |
+| **YOLO** | ✅ Yes | `yolo` | one-time |
+| **Pull Shark** | ✅ Yes | `pull-shark` | 2 / 16 / 128 / 1024 |
+| **Pair Extraordinaire** | ✅ Yes\* | `pair --with <user>` | 1 / 10 / 24 / 48 |
 | **Galaxy Brain** | ❌ No | `guide` | 2 / 8 / 16 / 32 |
 | **Starstruck** | ❌ No | `guide` | 16 / 128 / 512 / 4096 |
-| **Public Sponsor** | ❌ No | `guide` | sin niveles |
-| **Arctic Code Vault** / **Mars 2020** | ⛔ Retirados | — | — |
+| **Public Sponsor** | ❌ No | `guide` | one-time |
+| **Arctic Code Vault** | ⛔ Retired | — | — |
 
-\* Necesita una segunda cuenta de GitHub real (tuya o de alguien que te lo permita) para el trailer `Co-authored-by`.
+\* Requires a second real GitHub account for the `Co-authored-by` trailer.
 
-Los cuatro que no se automatizan no es por pereza del script: **Public Sponsor** requiere un pago real, y **Galaxy Brain** y **Starstruck** dependen de que otras personas te marquen respuestas o te den estrellas. Falsificarlos con cuentas títere es motivo de suspensión. `archivaments guide` te explica cómo conseguirlos de forma legítima.
-
----
-
-## Instalación
-
-```bash
-npm run archivaments -- --help
-```
-
-No hay `npm install`: el proyecto no tiene dependencias.
-
-Si lo quieres como comando global:
-
-```bash
-npm link
-```
+The four it won't do are not an oversight. **Public Sponsor** needs a real payment, and **Galaxy Brain** and **Starstruck** depend on other people accepting your answers or starring your work. Faking those with sock puppets gets accounts suspended. `archivaments guide` explains how to earn them legitimately instead.
 
 ---
 
-## Configuración (1 minuto)
-
-1. Crea un **token clásico** en <https://github.com/settings/tokens/new> con el scope **`repo`**.
-2. Copia la plantilla y pega el token dentro:
+## Setup
 
 ```bash
-cp .env.example .env
-```
-
-3. Edita `.env` y sustituye el valor de `GITHUB_TOKEN`.
-
-`.env` está en `.gitignore`, así que no se sube nunca. El token también se puede pasar por variable de entorno (`GITHUB_TOKEN` / `GH_TOKEN`) o con `--token`, y si tienes la GitHub CLI instalada y con sesión iniciada, se reutiliza `gh auth token` automáticamente.
-
-4. Comprueba que todo está bien:
-
-```bash
+git clone https://github.com/ToziGar/Archivaments.git
+cd Archivaments
+cp .env.example .env     # then paste your token into GITHUB_TOKEN
 npm run doctor
 ```
 
+Create a **classic token** at <https://github.com/settings/tokens/new> with the **`repo`** scope. `.env` is gitignored, so it never leaves your machine.
+
+The token is also read from `GITHUB_TOKEN` / `GH_TOKEN`, from `--token`, or from `gh auth token` if you have the GitHub CLI signed in.
+
+There is no `npm install` — the project has no dependencies.
+
 ---
 
-## Uso
+## Usage
 
-Antes de nada, mira lo que haría sin tocar tu cuenta:
-
-```bash
-node bin/archivaments.js all --with tu-otra-cuenta --dry-run
-```
-
-Y cuando lo tengas claro:
+Always look before you leap:
 
 ```bash
-node bin/archivaments.js all --with tu-otra-cuenta
+node bin/archivaments.js all --with your-other-account --dry-run
 ```
 
-Eso crea el repo público `archivaments-lab` y desbloquea **Quickdraw**, **Pair Extraordinaire**, **YOLO** y **Pull Shark** (nivel base) en un par de minutos.
-
-### Comandos sueltos
+Then run it for real:
 
 ```bash
-node bin/archivaments.js quickdraw                      # abre y cierra un issue
-node bin/archivaments.js yolo                           # PR mergeada sin review
-node bin/archivaments.js pair --with usuario1,usuario2  # commit co-autorizado
-node bin/archivaments.js pull-shark --tier bronce       # 16 PRs mergeadas
-node bin/archivaments.js pull-shark --count 40          # número exacto
-node bin/archivaments.js status                         # progreso real
-node bin/archivaments.js guide                          # los logros manuales
+node bin/archivaments.js all --with your-other-account
 ```
 
-### Opciones útiles
+That creates the public `archivaments-lab` repository and unlocks **Quickdraw**, **Pair Extraordinaire**, **YOLO** and **Pull Shark** in a couple of minutes.
 
-| Opción | Para qué |
+### Individual commands
+
+```bash
+node bin/archivaments.js quickdraw                    # open and close an issue
+node bin/archivaments.js yolo                         # merge a PR with no review
+node bin/archivaments.js pair --with user1,user2      # co-authored commit
+node bin/archivaments.js pull-shark --tier bronce     # reach 16 merged PRs
+node bin/archivaments.js pull-shark --target 128     # reach an exact total
+node bin/archivaments.js status                       # real progress
+node bin/archivaments.js guide                        # the manual achievements
+```
+
+### Options
+
+| Flag | Purpose |
 |---|---|
-| `--dry-run` | Enseña cada llamada sin ejecutarla |
-| `--yes` | Salta la confirmación (útil en scripts) |
-| `--repo <nombre>` | Otro repositorio sandbox (por defecto `archivaments-lab`) |
-| `--delay <ms>` | Espaciado entre escrituras (por defecto 1200) |
-| `--merge-method` | `merge` (por defecto), `squash` o `rebase` |
-| `--verbose` | Muestra cada petición a la API |
+| `--dry-run` | Print every call without sending it |
+| `--yes` | Skip the confirmation prompt |
+| `--target <n>` | Total merged PRs to reach; creates only what's missing |
+| `--tier <name>` | `base` / `bronce` / `plata` / `oro` (same as `--target`) |
+| `--fresh` | Ignore a previous run's checkpoint |
+| `--repo <name>` | Sandbox repository (default `archivaments-lab`) |
+| `--delay <ms>` | Spacing between writes (default 1200) |
+| `--merge-method` | `merge` (default), `squash` or `rebase` |
+| `--verbose` | Log every API request |
 
 ---
 
-## Detalles que hacen que otros scripts fallen
+## Why other scripts fail
 
-Estos son los tres motivos por los que la mayoría de intentos caseros no desbloquean nada:
+Three reasons homegrown attempts unlock nothing, all handled here:
 
-**1. Pair Extraordinaire no cuenta si el commit va directo a `main`.**
-El logro es «*coauthored commits on merged pull request*». El commit co-autorizado tiene que entrar por una pull request **mergeada**. Por eso `pair` crea rama → commit → PR → merge, no un push directo.
+**1. Pair Extraordinaire doesn't count for commits pushed straight to `main`.**
+The achievement is *"coauthored commits on merged pull request"*. The co-authored commit has to land through a **merged pull request**, so `pair` does branch → commit → PR → merge instead of a direct push.
 
-**2. El email del co-autor tiene que ser el noreply exacto.**
-El formato es `<id>+<login>@users.noreply.github.com`, donde `<id>` es el ID numérico de la cuenta. Si te lo inventas, GitHub no enlaza el commit con ninguna cuenta y el logro no suma. El CLI resuelve el ID por API antes de escribir el trailer.
+**2. The co-author's email must be their exact noreply address.**
+The format is `<id>+<login>@users.noreply.github.com`, where `<id>` is the account's numeric ID. Make it up and GitHub links the commit to nobody, so nothing counts. The CLI resolves the ID through the API before writing the trailer.
 
-**3. El merge por squash puede tirar los trailers.**
-Un squash reescribe el mensaje del commit, que es justo donde vive el `Co-authored-by`. Por eso el método por defecto es `merge`.
+**3. Squash merges throw the trailers away.**
+A squash rewrites the commit message — exactly where `Co-authored-by` lives. That's why the default merge method is `merge`.
 
-Y dos cosas de configuración:
+Plus two settings people miss:
 
-- **El repositorio tiene que ser público.** La actividad en repos privados no cuenta para los logros. El CLI crea el sandbox como público y aborta si detecta que es privado.
-- **Tienes que activar la casilla** «Show Achievements on my profile» en <https://github.com/settings/profile>, o no verás ninguno aunque los tengas.
+- **The repository must be public.** Private activity doesn't count. The CLI creates the sandbox as public and aborts if it finds a private one.
+- **Turn on "Show Achievements on my profile"** at <https://github.com/settings/profile>, or you'll never see them.
 
-Los logros tardan **de unos minutos a unas horas** en aparecer en el perfil. No los desbloquees dos veces pensando que ha fallado.
+Achievements take **minutes to hours** to show up. Don't run things twice assuming they failed.
 
 ---
 
-## Límites de la API
+## Rate limits
 
-Cada pull request son 4 escrituras (rama, commit, PR, merge). GitHub aplica un límite secundario de aproximadamente **80 peticiones que crean contenido por minuto**, así que el cliente espacia las escrituras 1,2 s por defecto y, si aun así recibe un 429, respeta el `Retry-After` y reintenta solo.
+Each pull request is 5 requests (branch, commit, PR, merge, plus reading the head). GitHub caps you at roughly **80 content-creating requests per minute** and **5000 requests per hour**.
 
-Órdenes de magnitud para `pull-shark`:
+A run to Pull Shark gold is about 5100 requests, so it *will* exceed the hourly quota. The client handles this: it spaces writes, pauses until the quota resets, honours `Retry-After`, and checkpoints every 10 PRs so an interrupted run resumes where it stopped.
 
-| Nivel | PRs | Tiempo aprox. |
+| Tier | PRs | Rough wall time |
 |---|---|---|
-| base | 2 | segundos |
-| bronce | 16 | ~1,5 min |
+| base | 2 | seconds |
+| bronce | 16 | ~1.5 min |
 | plata | 128 | ~11 min |
-| oro | 1024 | ~1,5 h |
+| oro | 1024 | ~85 min + one quota pause |
 
 ---
 
-## Estructura
+## Layout
 
 ```
-bin/archivaments.js     punto de entrada
-src/cli.js              parseo de argumentos y despacho
-src/github.js           cliente REST (throttling, reintentos, errores claros)
-src/lab.js              ciclo rama → commit → PR → merge
-src/config.js           token, defaults y tabla de niveles
-src/state.js            historial local de ejecuciones
-src/log.js              salida en consola
-src/commands/           un archivo por comando
-docs/logros.md          ficha detallada de cada logro
+bin/archivaments.js     entry point
+src/cli.js              argument parsing and dispatch
+src/github.js           REST client (throttling, retries, readable errors)
+src/lab.js              branch → commit → PR → merge cycle
+src/config.js           token resolution, defaults, tier tables
+src/state.js            local history and run checkpoints
+src/log.js              console output
+src/commands/           one file per command
+test/                   node:test suite, no test framework needed
+docs/logros.md          per-achievement reference (Spanish)
+```
+
+```bash
+npm test
 ```
 
 ---
 
-## Aviso
+## A note on all this
 
-Los logros de GitHub son cosméticos y no aparecen en las estadísticas de contribución. Hacerlos en un repositorio de pruebas propio es una práctica común y no viola los términos de servicio, pero **crear cuentas falsas** para estrellas, patrocinios o respuestas aceptadas sí que es motivo de suspensión. Este proyecto no hace nada de eso a propósito.
+GitHub achievements are cosmetic and don't affect your contribution graph. Earning them in a sandbox repository you own is common practice and doesn't break the Terms of Service. **Creating fake accounts** for stars, sponsorships or accepted answers does, and will get you suspended. This project deliberately refuses to do any of that.
 
-## Licencia
+## License
 
 MIT

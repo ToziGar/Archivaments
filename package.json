@@ -1,20 +1,53 @@
 {
   "name": "archivaments",
   "version": "1.0.0",
-  "description": "CLI sin dependencias para desbloquear logros (achievements) de GitHub en un repositorio sandbox propio",
+  "description": "Zero-dependency CLI that unlocks the automatable GitHub achievements in a sandbox repository you own",
   "type": "module",
   "bin": {
     "archivaments": "./bin/archivaments.js"
   },
+  "exports": {
+    ".": "./src/cli.js",
+    "./github": "./src/github.js",
+    "./lab": "./src/lab.js"
+  },
   "engines": {
     "node": ">=20.6"
   },
+  "files": [
+    "bin",
+    "src",
+    "docs",
+    "README.md",
+    "README.es.md",
+    "LICENSE"
+  ],
   "scripts": {
     "archivaments": "node bin/archivaments.js",
     "doctor": "node bin/archivaments.js doctor",
-    "status": "node bin/archivaments.js status"
+    "status": "node bin/archivaments.js status",
+    "test": "node --test \"test/*.test.js\"",
+    "test:watch": "node --test --watch \"test/*.test.js\""
   },
-  "keywords": ["github", "achievements", "logros", "pull-shark", "quickdraw", "yolo", "cli"],
-  "license": "MIT",
-  "private": true
+  "keywords": [
+    "github",
+    "achievements",
+    "badges",
+    "pull-shark",
+    "quickdraw",
+    "yolo",
+    "pair-extraordinaire",
+    "cli",
+    "zero-dependencies"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ToziGar/Archivaments.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ToziGar/Archivaments/issues"
+  },
+  "homepage": "https://github.com/ToziGar/Archivaments#readme",
+  "author": "LuisGar (https://github.com/ToziGar)",
+  "license": "MIT"
 }

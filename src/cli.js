@@ -30,7 +30,14 @@ const commands = {
 
 const aliases = { pullshark: 'pull-shark', ps: 'pull-shark', shark: 'pull-shark' };
 
-function parseArgs(argv) {
+// Opciones que nunca llevan valor. Sin esta lista, `--verbose status` se traga
+// el comando y lo guarda como valor de --verbose.
+const BOOLEAN_FLAGS = new Set([
+  'dry-run', 'dryRun', 'yes', 'y', 'verbose', 'no-color', 'fresh',
+  'help', 'h', 'version', 'v',
+]);
+
+export function parseArgs(argv) {
   const flags = {};
   const positional = [];
 
@@ -44,7 +51,7 @@ function parseArgs(argv) {
     const [key, inline] = clean.split('=');
     if (inline !== undefined) {
       flags[key] = inline;
-    } else if (argv[i + 1] && !argv[i + 1].startsWith('-')) {
+    } else if (!BOOLEAN_FLAGS.has(key) && argv[i + 1] && !argv[i + 1].startsWith('-')) {
       flags[key] = argv[++i];
     } else {
       flags[key] = true;
@@ -70,7 +77,9 @@ ${rows}
 ${color.bold('OPCIONES')}
   --with <usuarios>    Co-autores para "pair" (separados por comas)
   --count <n>          Numero de PRs para "pull-shark"
-  --tier <nivel>       base | bronce | plata | oro (equivale a --count)
+  --target <n>         Objetivo total de PRs mergeadas; crea solo las que falten
+  --tier <nivel>       base | bronce | plata | oro (equivale a --target)
+  --fresh              Ignora el checkpoint de una tirada anterior
   --repo <nombre>      Repositorio sandbox (por defecto: ${defaults.repo})
   --owner <login>      Propietario (por defecto: el usuario del token)
   --merge-method <m>   merge | squash | rebase (por defecto: merge)
@@ -90,8 +99,11 @@ ${color.bold('EJEMPLOS')}
   ${color.gray('# combo completo: Quickdraw + Pair + YOLO + Pull Shark base')}
   archivaments all --with mi-otra-cuenta
 
-  ${color.gray('# subir Pull Shark a bronce (16 PRs mergeadas)')}
+  ${color.gray('# subir Pull Shark a bronce (16 PRs mergeadas en total)')}
   archivaments pull-shark --tier bronce
+
+  ${color.gray('# ir a por el oro: pausa y reanuda sola al agotar la cuota')}
+  archivaments pull-shark --tier oro --yes
 `;
 }
 
