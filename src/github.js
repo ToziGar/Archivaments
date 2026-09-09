@@ -25,18 +25,42 @@ export class GitHub {
   #token;
   #lastMutation = 0;
 
-  constructor({ token, throttleMs = 1200, dryRun = false, verbose = false }) {
+  constructor({ token, throttleMs = 1200, dryRun = false, verbose = false, waitOnQuota = true, quotaBufferMs = 5000 }) {
     this.#token = token;
     this.throttleMs = throttleMs;
     this.dryRun = dryRun;
     this.verbose = verbose;
+    // Tiradas largas (Pull Shark oro son ~5100 peticiones frente a una cuota de
+    // 5000/hora) tienen que esperar al reset en vez de abortar a media faena.
+    this.waitOnQuota = waitOnQuota;
+    this.quotaBufferMs = quotaBufferMs;
     this.rateLimit = null;
+    this.quotaPauses = 0;
+  }
+
+  /** Duerme hasta que GitHub reponga la cuota, con un margen de seguridad. */
+  async #waitForQuota() {
+    const resetAt = this.rateLimit?.resetAt ?? new Date(Date.now() + 60_000);
+    const waitMs = Math.max(resetAt.getTime() - Date.now(), 0) + this.quotaBufferMs;
+    this.quotaPauses++;
+    log.warn(
+      `Cuota de la API agotada. Reanudo a las ${resetAt.toLocaleTimeString()} ` +
+        `(~${Math.ceil(waitMs / 60000)} min). Pausa ${this.quotaPauses}.`,
+    );
+    await sleep(waitMs);
   }
 
   async request(method, path, body, { retries = 3, allow404 = false } = {}) {
     if (this.dryRun && MUTATING.has(method)) {
       log.plain(`  ${method} ${path}`);
       return { __dryRun: true, number: 0, html_url: '(dry-run)' };
+    }
+
+    // Antes de escribir, si la cuota esta casi agotada esperamos al reset.
+    // Es mas barato pausar aqui que comerse un 403 y reintentar.
+    if (this.waitOnQuota && MUTATING.has(method) && this.rateLimit && this.rateLimit.remaining < 20) {
+      await this.#waitForQuota();
+      this.rateLimit = null;
     }
 
     // Espaciamos las escrituras para no chocar con el limite secundario.
@@ -80,17 +104,27 @@ export class GitHub {
     }
 
     // Limite secundario / abuso: GitHub pide esperar y reintentar.
-    const retryAfter = Number(response.headers.get('retry-after'));
+    // Ojo con Retry-After: 0 es un valor valido, asi que no vale un `||`.
+    const retryAfterHeader = response.headers.get('retry-after');
+    const retryAfter = retryAfterHeader === null ? null : Number(retryAfterHeader);
     const secondary =
       response.status === 429 || (response.status === 403 && /secondary rate/i.test(text));
     if (secondary && retries > 0) {
-      const waitMs = (retryAfter || 60) * 1000;
+      const seconds = retryAfter !== null && Number.isFinite(retryAfter) ? retryAfter : 60;
+      const waitMs = seconds * 1000;
       log.warn(`Limite secundario de GitHub. Espero ${Math.round(waitMs / 1000)}s y reintento...`);
       await sleep(waitMs);
       return this.request(method, path, body, { retries: retries - 1, allow404 });
     }
 
+    // Red de seguridad: si aun asi llegamos al 403 por cuota, esperamos y
+    // reintentamos en vez de tirar la ejecucion entera por la borda.
     if (response.status === 403 && this.rateLimit?.remaining === 0) {
+      if (this.waitOnQuota && retries > 0) {
+        await this.#waitForQuota();
+        this.rateLimit = null;
+        return this.request(method, path, body, { retries: retries - 1, allow404 });
+      }
       throw new GitHubError(
         `Se agoto tu cuota de la API. Se restablece a las ${this.rateLimit.resetAt.toLocaleTimeString()}.`,
         { status: 403, body: data, path },

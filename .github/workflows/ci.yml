@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests on Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20', '22', '24']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      # Sin dependencias: no hay nada que instalar ni cache que calentar.
+      - name: Run tests
+        run: npm test
+
+  smoke:
+    name: CLI smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Comandos que no necesitan token ni red.
+      - run: node bin/archivaments.js --version
+      - run: node bin/archivaments.js --help
+      - run: node bin/archivaments.js guide
+
+      - name: Fails cleanly without a token
+        run: |
+          if node bin/archivaments.js doctor; then
+            echo "Expected a non-zero exit without a token" && exit 1
+          fi
