@@ -122,9 +122,12 @@ export async function main(argv) {
     log.plain(VERSION);
     return 0;
   }
-  if (!command || flags.h || flags.help) {
+  // Pedir ayuda es un uso correcto y sale con 0; invocar sin comando es un
+  // error de uso y sale con 1, que es lo que espera cualquier script.
+  const wantsHelp = Boolean(flags.h || flags.help);
+  if (wantsHelp || !command) {
     log.plain(usage());
-    return command ? 0 : 1;
+    return wantsHelp ? 0 : 1;
   }
 
   const name = aliases[command] || command;

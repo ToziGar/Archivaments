@@ -26,8 +26,8 @@
     "archivaments": "node bin/archivaments.js",
     "doctor": "node bin/archivaments.js doctor",
     "status": "node bin/archivaments.js status",
-    "test": "node --test \"test/*.test.js\"",
-    "test:watch": "node --test --watch \"test/*.test.js\""
+    "test": "node --test",
+    "test:watch": "node --test --watch"
   },
   "keywords": [
     "github",

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { parseArgs } from '../src/cli.js';
+import { main, parseArgs } from '../src/cli.js';
 
 describe('parseo de argumentos', () => {
   it('separa el comando de las opciones', () => {
@@ -37,5 +37,40 @@ describe('parseo de argumentos', () => {
 
   it('devuelve command undefined sin argumentos', () => {
     assert.equal(parseArgs([]).command, undefined);
+  });
+});
+
+describe('codigos de salida', () => {
+  const silently = async (fn) => {
+    const log = console.log;
+    console.log = () => {};
+    try {
+      return await fn();
+    } finally {
+      console.log = log;
+    }
+  };
+
+  it('pedir ayuda sale con 0', async () => {
+    assert.equal(await silently(() => main(['--help'])), 0);
+    assert.equal(await silently(() => main(['-h'])), 0);
+  });
+
+  it('invocar sin comando sale con 1', async () => {
+    assert.equal(await silently(() => main([])), 1);
+  });
+
+  it('--version sale con 0', async () => {
+    assert.equal(await silently(() => main(['--version'])), 0);
+  });
+
+  it('un comando desconocido sale con 1', async () => {
+    const error = console.error;
+    console.error = () => {};
+    try {
+      assert.equal(await silently(() => main(['inventado'])), 1);
+    } finally {
+      console.error = error;
+    }
   });
 });

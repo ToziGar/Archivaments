@@ -27,7 +27,7 @@ jobs:
 
       # Sin dependencias: no hay nada que instalar ni cache que calentar.
       - name: Run tests
-        run: node --test "test/*.test.js"
+        run: npm test
 
   smoke:
     name: CLI smoke test
